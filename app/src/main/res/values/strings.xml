@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PDM - Login</string>
+
+    <string name="resource_login">http://ag-ifpb-sgd-server.herokuapp.com/login</string>
+</resources>
