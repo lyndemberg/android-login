@@ -34,13 +34,14 @@ public class LoginService extends IntentService {
                 .post(formBody)
                 .build();
 
-        Intent intentExecuted = new Intent(MainReceiver.ACTION_LOGIN_EXECUTED);
+        Intent intentExecuted = new Intent(MainReceiver.ACTION_MAIN);
+        intentExecuted.putExtra("event", MainReceiver.EVENT_LOGIN_EXECUTED);
         //value default to code
         try (Response response = clientHttp.newCall(request).execute()) {
-            String result = response.body().string();
-            intentExecuted.putExtra("result", result);
+            intentExecuted.putExtra("status",response.code());
             LocalBroadcastManager.getInstance(this).sendBroadcast(intentExecuted);
         } catch (IOException e) {
+            intentExecuted.putExtra("status",401);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intentExecuted);
         }
     }

@@ -24,15 +24,17 @@ public class MainActivity extends AppCompatActivity {
         receiver = new MainReceiver(){
             @Override
             public void resolveView(Intent intent) {
-                Button btn = findViewById(R.id.buttonAcessar);
-                btn.setText("Acessar");
-                btn.setEnabled(true);
+                if(intent.getStringExtra("event").equals(MainReceiver.EVENT_LOGIN_EXECUTED)){
+                    Button btn = findViewById(R.id.buttonAcessar);
+                    btn.setText("Acessar");
+                    btn.setEnabled(true);
 
-                String result = intent.getStringExtra("result");
-                if(result.equals("Success!!"))
-                    Toast.makeText(MainActivity.this,"Sucesso no login",Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(MainActivity.this,"Fracasso no login",Toast.LENGTH_LONG).show();
+                    int status = intent.getIntExtra("status", 401);
+                    if(status == 200)
+                        Toast.makeText(MainActivity.this,"Sucesso no login",Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(MainActivity.this,"Fracasso no login",Toast.LENGTH_LONG).show();
+                }
             }
         };
 
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         LocalBroadcastManager.getInstance(this)
-                .registerReceiver(receiver,new IntentFilter(MainReceiver.ACTION_LOGIN_EXECUTED));
+                .registerReceiver(receiver,new IntentFilter(MainReceiver.ACTION_MAIN));
         super.onResume();
     }
 
