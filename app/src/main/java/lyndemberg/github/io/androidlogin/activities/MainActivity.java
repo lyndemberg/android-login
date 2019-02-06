@@ -8,22 +8,48 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import lyndemberg.github.io.androidlogin.R;
-import lyndemberg.github.io.androidlogin.receivers.LoginReceiver;
+import lyndemberg.github.io.androidlogin.receivers.MainReceiver;
 import lyndemberg.github.io.androidlogin.services.LoginService;
 import lyndemberg.github.io.androidlogin.valueobject.CredentialsValue;
 
 public class MainActivity extends AppCompatActivity {
+    private MainReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        receiver = new MainReceiver(){
+            @Override
+            public void resolveView(Intent intent) {
+                Button btn = findViewById(R.id.buttonAcessar);
+                btn.setText("Acessar");
+                btn.setEnabled(true);
 
-        LoginReceiver loginReceiver = new LoginReceiver(this);
+                String result = intent.getStringExtra("result");
+                if(result.equals("Success!!"))
+                    Toast.makeText(MainActivity.this,"Sucesso no login",Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(MainActivity.this,"Fracasso no login",Toast.LENGTH_LONG).show();
+            }
+        };
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
         LocalBroadcastManager.getInstance(this)
-                .registerReceiver(loginReceiver,new IntentFilter(LoginReceiver.ACTION_LOGIN_EXECUTED));
+                .registerReceiver(receiver,new IntentFilter(MainReceiver.ACTION_LOGIN_EXECUTED));
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 
     public void clickAcessar(View view) {
@@ -40,8 +66,4 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }
