@@ -45,10 +45,10 @@ public class LoginService extends IntentService {
         Intent intentExecuted = new Intent(LoginReceiver.ACTION_LOGIN_EXECUTED);
         //value default to code
         try (Response response = clientHttp.newCall(request).execute()) {
-            intentExecuted.putExtra("status", response.code());
+            String result = response.body().string();
+            intentExecuted.putExtra("result", result);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intentExecuted);
         } catch (IOException e) {
-            intentExecuted.putExtra("status", 401);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intentExecuted);
         }
     }

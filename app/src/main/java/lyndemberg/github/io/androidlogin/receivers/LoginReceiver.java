@@ -24,8 +24,9 @@ public class LoginReceiver extends BroadcastReceiver {
         Button btn = ctx.findViewById(R.id.buttonAcessar);
         btn.setText("Acessar");
         btn.setEnabled(true);
-        int status = intent.getIntExtra("status", 401);
-        if(status == 200)
+
+        String result = intent.getStringExtra("result");
+        if(result.equals("Success!!"))
             Toast.makeText(ctx,"Sucesso no login",Toast.LENGTH_LONG).show();
         else
             Toast.makeText(ctx,"Fracasso no login",Toast.LENGTH_LONG).show();
